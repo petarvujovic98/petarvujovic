@@ -1,0 +1,54 @@
+{
+  "root": "packages/eslint-config",
+  "sourceRoot": "packages/eslint-config/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/packages/eslint-config",
+        "main": "packages/eslint-config/src/index.ts",
+        "tsConfig": "packages/eslint-config/tsconfig.lib.json",
+        "assets": [
+          "packages/eslint-config/*.md"
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "npm publish --tag=latest --access public",
+        "cwd": "dist/packages/eslint-config"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/eslint-config/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/packages/eslint-config"
+      ],
+      "options": {
+        "jestConfig": "packages/eslint-config/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": [
+    "eslint",
+    "eslintconfig"
+  ]
+}

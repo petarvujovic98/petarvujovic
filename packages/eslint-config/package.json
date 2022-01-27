@@ -1,0 +1,26 @@
+{
+  "name": "@petarvujovic/eslint-config",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "description": "Personal ESlint configuration",
+  "author": {
+    "name": "Petar Vujović",
+    "email": "petarvujovic98@gmail.com"
+  },
+  "keywords": [
+    "eslint",
+    "eslintconfig"
+  ],
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0"
+  },
+  "peerDependencies": {
+    "eslint": "^8.7.0",
+    "prettier": "^2.5.1"
+  }
+}

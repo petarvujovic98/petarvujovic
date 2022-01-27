@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          command: manifest
+
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+
+  publish-npm:
+    if: ${{ needs.release-please.outputs.release_created }}
+    needs: release-please
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+          registry-url: "https://registry.npmjs.org/"
+
+      - run: npm ci
+      - run: npx nx affected --target=publish
+        env:
+          NODE_ENV: production
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  publish-gpr:
+    if: ${{ needs.release-please.outputs.release_created }}
+    needs: release-please
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+          registry-url: "https://npm.pkg.github.com/"
+
+      - run: npm ci
+      - run: |
+          npx nx affected
+          echo "$(sed 's/\"name\": \"/&@petarvujovic98\//' package.json)" > package.json
+      - run: npx nx affected --target=publish
+        env:
+          NODE_ENV: production
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
