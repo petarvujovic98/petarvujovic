@@ -51,9 +51,7 @@ jobs:
           registry-url: "https://npm.pkg.github.com/"
 
       - run: npm ci
-      - run: |
-          npx nx affected
-          echo "$(sed 's/\"name\": \"/&@petarvujovic98\//' package.json)" > package.json
+      - run: ./scripts/update-affected-names.sh
       - run: npx nx affected --target=publish
         env:
           NODE_ENV: production
